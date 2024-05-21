@@ -1,20 +1,24 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Conectar ao MongoDB
-mongoose.connect('mongodb://localhost:27017/seu_banco_de_dados', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
+//DB Connection
+const conn = require("./db/conn");
+
+conn();
+
+
+
+
+
 
 app.use(cors());
 app.use(express.json());
 
 // Middleware de verificação de token
+/*
 const verifyToken = (req, res, next) => {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     if (!token) return res.status(401).send('Acesso negado');
@@ -27,10 +31,11 @@ const verifyToken = (req, res, next) => {
         res.status(400).send('Token inválido');
     }
 };
+*/
 
 // Definir as rotas de autenticação
-const authRoutes = require('./routes/auth');
-app.use('/api/auth', authRoutes);
+const routes = require('./routes/router');
+app.use('/api', routes);
 
 // Cursos
 const cursos = [
@@ -148,7 +153,7 @@ const cursos = [
 ];
 
 // Rota para obter cursos, protegida pelo middleware verifyToken
-app.get('/cursos', verifyToken, (req, res) => {
+app.get('/cursos', (req, res) => {
     res.json(cursos);
 });
 

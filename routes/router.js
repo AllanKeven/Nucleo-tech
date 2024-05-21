@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const serviceController = require('../controllers/serviceController');
 const router = express.Router();
 
 // Registrar um novo usuário
@@ -33,5 +34,9 @@ router.post('/login', async (req, res) => {
         res.status(500).send('Erro ao fazer login');
     }
 });
+
+router.route("/login").post((req, res) => serviceController.create(req, res))
+
+router.route("/services").post((req, res) => serviceController.create(req, res))
 
 module.exports = router;
