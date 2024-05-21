@@ -1,3 +1,4 @@
+/*
 const user = require("../models/user");
 const {user:ServiceModel} = require("../models/user");
 
@@ -10,7 +11,7 @@ const serviceController = {
                 password: req.body.password
             }
             const response = await ServiceModel.create(user);
-            response.status(201).json({response, msg : "Serviço criado com sucesso"})
+            res.status(201).json({response, msg : "Serviço criado com sucesso"})
         }catch(error){
             console.log(error)
         }
@@ -18,3 +19,4 @@ const serviceController = {
 };
 
 module.exports = serviceController;
+*/

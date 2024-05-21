@@ -28,15 +28,10 @@ router.post('/login', async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).send('Senha incorreta');
 
-        const token = jwt.sign({ userId: user._id }, 'seu_segredo_jwt', { expiresIn: '1h' });
-        res.json({ token });
+        res.status(200).send('Usuário logado com sucesso');
     } catch (err) {
         res.status(500).send('Erro ao fazer login');
     }
 });
-
-router.route("/login").post((req, res) => serviceController.create(req, res))
-
-router.route("/services").post((req, res) => serviceController.create(req, res))
 
 module.exports = router;

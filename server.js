@@ -9,29 +9,9 @@ const conn = require("./db/conn");
 
 conn();
 
-
-
-
-
-
 app.use(cors());
 app.use(express.json());
 
-// Middleware de verificação de token
-/*
-const verifyToken = (req, res, next) => {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-    if (!token) return res.status(401).send('Acesso negado');
-
-    try {
-        const verified = jwt.verify(token, 'seu_segredo_jwt');
-        req.user = verified;
-        next();
-    } catch (err) {
-        res.status(400).send('Token inválido');
-    }
-};
-*/
 
 // Definir as rotas de autenticação
 const routes = require('./routes/router');
