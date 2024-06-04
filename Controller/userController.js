@@ -8,9 +8,24 @@ const { sign } = require('jsonwebtoken');
         try {
             console.log("Entrou")
             const { username, password, email, tellNumber, hasTeacher } = req.body;
+
+            if( !username ) return res.status(400).send("É necessario um nome de usuario!")
+            if( !password ) return res.status(400).send("É necessario uma senha!")
+            if( !email ) return res.status(400).send("É necessario um email!")
+            if( !tellNumber ) return res.status(400).send("É necessario um numero de telefone!")
+            if( !hasTeacher ) hasTeacher = false
+
+            const userByEmail = await User.findOne({ email })
+            if(userByEmail) return res.status(400).send("Este email já esta sendo utilizado")
+
+            const userByPhone = await User.findOne({ tellNumber })
+            if(userByPhone) return res.status(400).send("Este número já esta sendo utilizado")
+
             const hashedPassword = await bcrypt.hash(password, 10);  
             const newUser = new User({ username, password: hashedPassword, email, tellNumber,hasTeacher});  
+
             await newUser.save();
+
             res.status(201).send('Usuário registrado com sucesso');
         } catch (err) {
             console.log(err);
