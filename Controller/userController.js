@@ -6,9 +6,9 @@ const User = require('../models/user');
     async registerUser (req, res){
         try {
             console.log("Entrou")
-            const { username, password, email } = req.body;  // Inclua email aqui
+            const { username, password, email, tellNumber, hasTeacher } = req.body;
             const hashedPassword = await bcrypt.hash(password, 10);  
-            const newUser = new User({ username, password: hashedPassword, email, hasTeacher: false});  
+            const newUser = new User({ username, password: hashedPassword, email, tellNumber,hasTeacher});  
             await newUser.save();
             res.status(201).send('Usuário registrado com sucesso');
         } catch (err) {
@@ -19,8 +19,8 @@ const User = require('../models/user');
 
     async loginUser (req, res){
         try {
-            const { username, password } = req.body;
-            const user = await User.findOne({ username });
+            const { email, password } = req.body;
+            const user = await User.findOne({ email });
             if (!user) return res.status(400).send('Usuário não encontrado');
     
             const isMatch = await bcrypt.compare(password, user.password);
@@ -53,6 +53,7 @@ const User = require('../models/user');
             res.status(500).send('Erro ao atualizar o usuário');
         }
     }
+
     async deleteUser(req, res) {
         try {
             const { id } = req.params;
