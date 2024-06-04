@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt'); 
 const User = require('../models/user');
+const { sign } = require('jsonwebtoken');
  
  class userController{
 
@@ -21,12 +22,23 @@ const User = require('../models/user');
         try {
             const { email, password } = req.body;
             const user = await User.findOne({ email });
-            if (!user) return res.status(400).send('Usuário não encontrado');
+            if (!user) return res.status(404).send('Usuário não encontrado');
     
             const isMatch = await bcrypt.compare(password, user.password);
-            if (!isMatch) return res.status(400).send('Senha incorreta');
+            if (!isMatch) return res.status(401).send('Senha incorreta');
     
-            res.status(200).send('Usuário logado com sucesso');
+            const token = sign({}, "158789237109234sfdadf",{
+                subject: user.id,
+                expiresIn: "1d"
+            })
+
+            res.status(200).json({
+                authenticated: true,
+                token,
+                username: user.username,
+                email: user.email,
+                id: user.id
+            });
         } catch (err) {
             res.status(500).send('Erro ao fazer login');
         }

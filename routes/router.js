@@ -10,11 +10,11 @@ router.post('/register', new userController().registerUser);
 
 router.post('/login', new userController().loginUser);
 
-router.get('/usuario', new userController().getUser);
+router.get('/users', new userController().getUser);
 
-router.patch('/usuario/:id', new userController().updateUser);
+router.patch('/user/:id', new userController().updateUser);
 
-router.delete('/usuario/:id', new userController().deleteUser);
+router.delete('/user/:id', new userController().deleteUser);
 
 
 
