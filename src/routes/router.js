@@ -1,9 +1,8 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
-const { userController } = require('../Controller/userController');
-const { FaNeuter } = require('react-icons/fa');
 const router = express.Router();
+const { userController } = require('../controller/userController');
 
 
 router.post('/register', new userController().registerUser);
