@@ -42,7 +42,7 @@ const { sign } = require('jsonwebtoken');
             const isMatch = await bcrypt.compare(password, user.password);
             if (!isMatch) return res.status(401).send('Senha incorreta');
     
-            const token = sign({}, "158789237109234sfdadf",{
+            const token = sign({}, process.env.HASH_USER_TOKEN,{
                 subject: user.id,
                 expiresIn: "1d"
             })

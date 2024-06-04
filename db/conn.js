@@ -3,7 +3,7 @@
     async function main() {
         try{
             mongoose.set("strictQuery", true)
-            await mongoose.connect("mongodb+srv://allankeven:68IN4cKTClrpCtKe@cluster0.8qhqjji.mongodb.net/");
+            await mongoose.connect(process.env.URL_DATABASE);
             console.log("Banco conectado")
 
         }catch(error){
