@@ -1,8 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const jwt = require('jsonwebtoken');
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3333;
 
 //DB Connection
 const conn = require("./db/conn");
@@ -132,7 +131,7 @@ const cursos = [
     }
 ];
 
-// Rota para obter cursos, protegida pelo middleware verifyToken
+// Rota para obter cursos
 app.get('/cursos', (req, res) => {
     res.json(cursos);
 });
@@ -140,3 +139,5 @@ app.get('/cursos', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
+
+module.exports = app;
