@@ -1,28 +1,27 @@
-const bcrypt = require('bcrypt'); 
+const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const { sign } = require('jsonwebtoken');
- 
- class userController{
 
-    async registerUser (req, res){
+class userController {
+
+    async registerUser(req, res) {
         try {
             console.log("Entrou")
             const { username, password, email, tellNumber, hasTeacher } = req.body;
 
-            if( !username ) return res.status(400).send("É necessario um nome de usuario!")
-            if( !password ) return res.status(400).send("É necessario uma senha!")
-            if( !email ) return res.status(400).send("É necessario um email!")
-            if( !tellNumber ) return res.status(400).send("É necessario um numero de telefone!")
-            if( !hasTeacher ) hasTeacher = false
+            if (!username) return res.status(400).send("É necessario um nome de usuario!")
+            if (!password) return res.status(400).send("É necessario uma senha!")
+            if (!email) return res.status(400).send("É necessario um email!")
+            if (!tellNumber) return res.status(400).send("É necessario um numero de telefone!")
 
             const userByEmail = await User.findOne({ email })
-            if(userByEmail) return res.status(400).send("Este email já esta sendo utilizado")
+            if (userByEmail) return res.status(400).send("Este email já esta sendo utilizado")
 
             const userByPhone = await User.findOne({ tellNumber })
-            if(userByPhone) return res.status(400).send("Este número já esta sendo utilizado")
+            if (userByPhone) return res.status(400).send("Este número já esta sendo utilizado")
 
-            const hashedPassword = await bcrypt.hash(password, 10);  
-            const newUser = new User({ username, password: hashedPassword, email, tellNumber,hasTeacher});  
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const newUser = new User({ username, password: hashedPassword, email, tellNumber, hasTeacher });
 
             await newUser.save();
 
@@ -33,16 +32,16 @@ const { sign } = require('jsonwebtoken');
         }
     }
 
-    async loginUser (req, res){
+    async loginUser(req, res) {
         try {
             const { email, password } = req.body;
             const user = await User.findOne({ email });
             if (!user) return res.status(404).send('Usuário não encontrado');
-    
+
             const isMatch = await bcrypt.compare(password, user.password);
             if (!isMatch) return res.status(401).send('Senha incorreta');
-    
-            const token = sign({}, process.env.HASH_USER_TOKEN,{
+
+            const token = sign({}, process.env.HASH_USER_TOKEN, {
                 subject: user.id,
                 expiresIn: "1d"
             })
@@ -59,9 +58,9 @@ const { sign } = require('jsonwebtoken');
         }
     }
 
-    async getUser (req, res){
+    async getUser(req, res) {
         try {
-            const users = await User.find({}, '-password');  
+            const users = await User.find({}, '-password');
             res.status(200).json(users);
         } catch (err) {
             res.status(500).send('Erro ao obter os usuários');
@@ -93,5 +92,5 @@ const { sign } = require('jsonwebtoken');
     }
 
 }
-module.exports = {userController};
+module.exports = { userController };
 
