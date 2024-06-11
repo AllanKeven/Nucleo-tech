@@ -12,7 +12,7 @@ class courseController {
             new Course({ courseName, author, describe }).save()
             res.status(201).json({ message: 'Curso criado com sucesso' })
         } catch (error) {
-            console.log(error);
+            console.error(error);
             res.status(500).json({ message: 'Internal server error' })
         }
     }
@@ -37,7 +37,7 @@ class courseController {
             })
             res.status(200).json({ message: 'Curso atualizado com sucesso!' })
         } catch (error) {
-            console.log(error);
+            console.error(error);
             res.status(500).json({ message: 'Internal server error' })
 
         }
@@ -57,7 +57,7 @@ class courseController {
             await Course.findByIdAndDelete({ courseId })
             res.status(200).json({ message: 'Curso removido com sucesso!' })
         } catch (error) {
-            console.log(error)
+            console.error(error)
             res.status(404).json({ message: 'Não foi possivel encontrar ou deletar este curso!' })
         }
     }
@@ -67,7 +67,7 @@ class courseController {
             const courseList = await Course.find({});
             res.status(200).json(courseList)
         } catch (error) {
-            console.log(error);
+            console.error(error);
             res.status(500).json({ message: 'Internal server error!' })
         }
     }
@@ -83,7 +83,7 @@ class courseController {
         try {
             courseSelected = await Course.findById(courseId)
         } catch (error) {
-            console.log(error);
+            console.error(error);
             res.status(404).json({ message: 'O curso selecionado não existe!' })
         }
 
@@ -94,7 +94,7 @@ class courseController {
             await Course.findByIdAndUpdate(courseId, { modulesIds: [...courseSelected.modulesIds, newModule._id] })
             res.status(200).json({ message: 'Modulo criado com sucesso!' })
         } catch (error) {
-            console.log(error);
+            console.error(error);
             res.status(500).json({ message: 'Internal server error!' })
         }
     }
@@ -117,7 +117,7 @@ class courseController {
             })
             res.status(200).json({ message: 'Modulo atualizado com sucesso!' })
         } catch (error) {
-            console.log(error);
+            console.error(error);
             res.status(500).json({ message: 'Internal server error' })
         }
     }
@@ -137,7 +137,7 @@ class courseController {
         try {
             moduleSelected = await Module.findById(moduleId)
         } catch (error) {
-            console.log(error)
+            console.error(error)
             res.status(404).json({ message: 'Não foi possivel encontrar o modulo!' })
         }
 
@@ -156,7 +156,7 @@ class courseController {
 
             res.status(200).json({ message: "Modulo deletado com sucesso!" })
         } catch (error) {
-            console.log(error);
+            console.error(error);
             res.status(500).json({ message: 'Internal server error!' })
         }
     }
@@ -168,7 +168,6 @@ class courseController {
 
         try {
             moduleSelected = await Module.findById(moduleId)
-            console.log(moduleSelected)
         } catch (error) {
             res.status(401).json({ message: 'É necessario selecionar um modulo!' })
         }
@@ -177,7 +176,7 @@ class courseController {
             await Module.findByIdAndUpdate(moduleId, { videosIds: [...moduleSelected.videosIds, newVideo._id] })
             res.status(200).json({ message: 'Video adicionado com sucesso!' })
         } catch (error) {
-            console.log(error);
+            console.error(error);
             res.status(500).json({ message: 'Internal server error!' })
         }
     }
@@ -202,7 +201,7 @@ class courseController {
             })
             res.status(200).json({ message: 'Video atualizado com sucesso!' })
         } catch (error) {
-            console.log(error);
+            console.error(error);
             res.status(500).json({ message: 'Internal server error' })
         }
     }
@@ -214,6 +213,40 @@ class courseController {
             await Video.findByIdAndDelete(videoId)
         } catch (error) {
             res.status(500).json({ message: 'Internal server error!' })
+        }
+    }
+
+    async getVideoById(req, res) {
+        const { videoId } = req.params
+        try {
+            const videoSelected = await Video.findById(videoId)
+            return res.status(200).json(videoSelected)
+        } catch (error) {
+            console.error(error);
+            return res.status(404).json({ message: 'Video não encontrado!' })
+        }
+    }
+
+    async getModuleById(req, res) {
+        const { moduleId } = req.params
+
+        try {
+            const moduleSelected = await Module.findById(moduleId)
+            return res.status(200).json(moduleSelected)
+        } catch (error) {
+            console.error(error);
+            return res.status(404).json({ message: 'Modulo não encontrado!' })
+        }
+    }
+
+    async getCourseById(req, res) {
+        const { courseId } = req.params
+        try {
+            const courseSelected = await Course.findById(courseId)
+            return res.status(200).json(courseSelected)
+        } catch (error) {
+            console.error(error);
+            return res.status(404).json({ message: 'Curso não encontrado!' })
         }
     }
 }

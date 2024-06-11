@@ -6,7 +6,6 @@ class userController {
 
     async registerUser(req, res) {
         try {
-            console.log("Entrou")
             const { username, password, email, tellNumber, hasTeacher } = req.body;
 
             if (!username) return res.status(400).send("É necessario um nome de usuario!")
@@ -27,7 +26,7 @@ class userController {
 
             res.status(201).send('Usuário registrado com sucesso');
         } catch (err) {
-            console.log(err);
+            console.error(err);
             res.status(500).send('Erro ao registrar o usuário');
         }
     }
@@ -54,6 +53,7 @@ class userController {
                 id: user.id
             });
         } catch (err) {
+            console.error(error);
             res.status(500).send('Erro ao fazer login');
         }
     }
@@ -63,6 +63,7 @@ class userController {
             const users = await User.find({}, '-password');
             res.status(200).json(users);
         } catch (err) {
+            console.error(error);
             res.status(500).send('Erro ao obter os usuários');
         }
 
@@ -76,6 +77,7 @@ class userController {
             if (!updatedUser) return res.status(404).send('Usuário não encontrado');
             res.status(200).json(updatedUser);
         } catch (err) {
+            console.error(error)
             res.status(500).send('Erro ao atualizar o usuário');
         }
     }
@@ -87,7 +89,33 @@ class userController {
             if (!deletedUser) return res.status(404).send('Usuário não encontrado');
             res.status(200).send('Usuário deletado com sucesso');
         } catch (err) {
+            console.error(error)
             res.status(500).send('Erro ao deletar o usuário');
+        }
+    }
+
+    async addCourseProgressInUserProfile(req, res) {
+        const { userId } = req.params
+        const { videoId, moduleId, courseId } = req.body
+
+        if (!userId) return res.stats(200).json({ message: 'Usuário não encontrado!' })
+        if (!videoId || !moduleId || !courseId) return res.status(400).json({ message: 'Parametros necessarios não encontrados' })
+
+        try {
+            const userSelected = await User.findById(userId)
+            const newProgress = { videoId, moduleId, courseId }
+            for (let i = 0; i < userSelected.progressCourse.length; i++) {
+                if (videoId == userSelected.progressCourse[i].videoId) {
+                    return res.status(400).json({ message: 'Video ja cadastrado!' })
+                }
+            }
+            await User.findByIdAndUpdate(userId, {
+                progressCourse: [...userSelected.progressCourse, newProgress]
+            })
+            res.status(200).json({ message: 'Aula adicionada com sucesso!' })
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'Internal server error!' })
         }
     }
 
