@@ -5,7 +5,8 @@ const CourseSchema = new mongoose.Schema({
     author: { type: String, required: true },
     describe: { type: String, required: true },
     rate: { type: Number, required: true, default: 5 },
-    modulesIds: { type: [String] }
+    modulesIds: { type: [String] },
+    icon: {type: String, required: true}
 });
 
 module.exports = mongoose.model('Course', CourseSchema);

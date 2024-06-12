@@ -36,7 +36,10 @@ class userController {
             const { email, password } = req.body;
             const user = await User.findOne({ email });
             if (!user) return res.status(404).send('Usuário não encontrado');
+            if (!password) return res.status(404).send('Senha é necessaria');
 
+
+            console.log(password, user.password);
             const isMatch = await bcrypt.compare(password, user.password);
             if (!isMatch) return res.status(401).send('Senha incorreta');
 
@@ -53,7 +56,7 @@ class userController {
                 id: user.id
             });
         } catch (err) {
-            console.error(error);
+            console.error(err);
             res.status(500).send('Erro ao fazer login');
         }
     }

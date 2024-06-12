@@ -4,12 +4,12 @@ const Video = require('../models/videoSchema');
 
 class courseController {
     async createCourse(req, res) {
-        const { courseName, author, describe } = req.body;
+        const { courseName, author, describe, icon } = req.body;
 
-        if (!courseName || !author || !describe) return res.status(400).json({ message: 'Algum parametro esta em falta!' })
+        if (!courseName || !author || !describe || !icon) return res.status(400).json({ message: 'Algum parametro esta em falta!' })
 
         try {
-            new Course({ courseName, author, describe }).save()
+            new Course({ courseName, author, describe, icon }).save()
             return res.status(201).json({ message: 'Curso criado com sucesso' })
         } catch (error) {
             console.error(error);
@@ -18,7 +18,7 @@ class courseController {
     }
 
     async updateCourse(req, res) {
-        const { courseName, author, describe } = req.body;
+        const { courseName, author, describe, icon } = req.body;
         const { courseId } = req.params;
 
         let courseUpdate
@@ -34,6 +34,7 @@ class courseController {
                 courseName: courseName ? courseName : courseUpdate.courseName,
                 author: author ? author : courseUpdate.author,
                 describe: describe ? describe : courseUpdate.describe,
+                icon: icon ? icon : courseUpdate.icon,
             })
             return res.status(200).json({ message: 'Curso atualizado com sucesso!' })
         } catch (error) {
