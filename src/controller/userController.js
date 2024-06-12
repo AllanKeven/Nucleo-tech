@@ -69,11 +69,12 @@ class userController {
 
     }
 
+
     async updateUser(req, res) {
         try {
             const { id } = req.params;
             const { username, email, hasTeacher } = req.body;
-            const updatedUser = await User.findByIdAndUpdate(id, { username, email, hasTeacher }, { new: true });
+            const updatedUser = await User.findByIdAndUpdate(id, { username, email, hasTeacher });
             if (!updatedUser) return res.status(404).send('Usuário não encontrado');
             res.status(200).json(updatedUser);
         } catch (err) {
@@ -104,9 +105,11 @@ class userController {
         try {
             const userSelected = await User.findById(userId)
             const newProgress = { videoId, moduleId, courseId }
-            for (let i = 0; i < userSelected.progressCourse.length; i++) {
-                if (videoId == userSelected.progressCourse[i].videoId) {
-                    return res.status(400).json({ message: 'Video ja cadastrado!' })
+            if(userSelected.progressCourse){
+                for (let i = 0; i < userSelected.progressCourse.length; i++) {
+                    if (videoId == userSelected.progressCourse[i].videoId) {
+                        return res.status(400).json({ message: 'Video ja cadastrado!' })
+                    }
                 }
             }
             await User.findByIdAndUpdate(userId, {
